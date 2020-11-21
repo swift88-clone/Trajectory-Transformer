@@ -21,7 +21,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 def main():
     parser=argparse.ArgumentParser(description='Train the individual Transformer model')
-    parser.add_argument('--dataset_folder',type=str,default='datasets')
+    parser.add_argument('--dataset_folder',type=str,default='/content/Trajectory-Transformer/datasets')
     parser.add_argument('--dataset_name',type=str,default='zara1')
     parser.add_argument('--obs',type=int,default=8)
     parser.add_argument('--preds',type=int,default=12)
@@ -34,7 +34,7 @@ def main():
     parser.add_argument('--val_size',type=int, default=0)
     parser.add_argument('--gpu_device',type=str, default="0")
     parser.add_argument('--verbose',action='store_true')
-    parser.add_argument('--max_epoch',type=int, default=100)
+    parser.add_argument('--max_epoch',type=int, default=2)
     parser.add_argument('--batch_size',type=int,default=100)
     parser.add_argument('--validation_epoch_start', type=int, default=30)
     parser.add_argument('--resume_train',action='store_true')
@@ -50,29 +50,29 @@ def main():
     model_name=args.name
 
     try:
-        os.mkdir('models')
+        os.mkdir('/content/Trajectory-Transformer/models')
     except:
         pass
     try:
-        os.mkdir('output')
+        os.mkdir('/content/Trajectory-Transformer/output')
     except:
         pass
     try:
-        os.mkdir('output/QuantizedTF')
+        os.mkdir('/content/Trajectory-Transformer/output/QuantizedTF')
     except:
         pass
     try:
-        os.mkdir(f'models/QuantizedTF')
-    except:
-        pass
-
-    try:
-        os.mkdir(f'output/QuantizedTF/{args.name}')
+        os.mkdir(f'/content/Trajectory-Transformer/models/QuantizedTF')
     except:
         pass
 
     try:
-        os.mkdir(f'models/QuantizedTF/{args.name}')
+        os.mkdir(f'/content/Trajectory-Transformer/output/QuantizedTF/{args.name}')
+    except:
+        pass
+
+    try:
+        os.mkdir(f'/content/Trajectory-Transformer/models/QuantizedTF/{args.name}')
     except:
         pass
 
@@ -100,7 +100,7 @@ def main():
 
     test_dataset,_ =  baselineUtils.create_dataset(args.dataset_folder,args.dataset_name,0,args.obs,args.preds,delim=args.delim,train=False,eval=True,verbose=args.verbose)
 
-    mat = scipy.io.loadmat(os.path.join(args.dataset_folder, args.dataset_name, "clusters.mat"))
+    mat = scipy.io.loadmat(os.path.join('/content/Trajectory-Transformer',args.dataset_folder, args.dataset_name, "clusters.mat"))
     clusters=mat['centroids']
 
     import quantized_TF
@@ -241,7 +241,7 @@ def main():
                 log.add_scalar('eval/DET_mad', mad, epoch)
                 log.add_scalar('eval/DET_fad', fad, epoch)
 
-                scipy.io.savemat(f"output/QuantizedTF/{args.name}/{epoch:05d}.mat",
+                scipy.io.savemat(f"/content/Trajectory-Transformer/output/QuantizedTF/{args.name}/{epoch:05d}.mat",
                                  {'input': inp, 'gt': gt, 'pr': pr, 'peds': peds, 'frames': frames, 'dt': dt,
                                   'dt_names': dt_names})
 
@@ -302,7 +302,7 @@ def main():
                     log.add_scalar('eval/MM_fad', fad_samp, epoch)
 
             if epoch % args.save_step == 0:
-                torch.save(model.state_dict(), f'models/QuantizedTF/{args.name}/{epoch:05d}.pth')
+                torch.save(model.state_dict(), f'/content/Trajectory-Transformer/models/QuantizedTF/{args.name}/{epoch:05d}.pth')
 
 
 
@@ -310,36 +310,6 @@ def main():
         epoch+=1
 
     ab=1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 if __name__=='__main__':
     main()
