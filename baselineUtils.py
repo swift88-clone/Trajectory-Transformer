@@ -10,14 +10,14 @@ import scipy.io
 def create_dataset(dataset_folder,dataset_name,val_size,gt,horizon,delim="\t",train=True,eval=False,verbose=False):
 
         if train==True:
-            datasets_list = os.listdir(os.path.join(dataset_folder,dataset_name, "train"))
-            full_dt_folder=os.path.join(dataset_folder,dataset_name, "train")
+            datasets_list = os.listdir(os.path.join('/content/Trajectory-Transformer',dataset_folder,dataset_name, "train"))
+            full_dt_folder=os.path.join('/content/Trajectory-Transformer',dataset_folder,dataset_name, "train")
         if train==False and eval==False:
-            datasets_list = os.listdir(os.path.join(dataset_folder, dataset_name, "val"))
-            full_dt_folder = os.path.join(dataset_folder, dataset_name, "val")
+            datasets_list = os.listdir(os.path.join('/content/Trajectory-Transformer',dataset_folder, dataset_name, "val"))
+            full_dt_folder = os.path.join('/content/Trajectory-Transformer',dataset_folder, dataset_name, "val")
         if train==False and eval==True:
-            datasets_list = os.listdir(os.path.join(dataset_folder, dataset_name, "test"))
-            full_dt_folder = os.path.join(dataset_folder, dataset_name, "test")
+            datasets_list = os.listdir(os.path.join('/content/Trajectory-Transformer',dataset_folder, dataset_name, "test"))
+            full_dt_folder = os.path.join('/content/Trajectory-Transformer',dataset_folder, dataset_name, "test")
 
 
         datasets_list=datasets_list
@@ -151,12 +151,12 @@ class IndividualTfDataset(Dataset):
 
 def create_folders(baseFolder,datasetName):
     try:
-        os.mkdir(baseFolder)
+        os.mkdir('/content/Trajectory-Transformer/baseFolder')
     except:
         pass
 
     try:
-        os.mkdir(os.path.join(baseFolder,datasetName))
+        os.mkdir(os.path.join('/content/Trajectory-Transformer',baseFolder,datasetName))
     except:
         pass
 
