@@ -45,29 +45,29 @@ def main():
     model_name=args.name
 
     try:
-        os.mkdir('models')
+        os.mkdir('/content/Trajectory-Transformer/models')
     except:
         pass
     try:
-        os.mkdir('output')
+        os.mkdir('/content/Trajectory-Transformer/output')
     except:
         pass
     try:
-        os.mkdir('output/QuantizedTF')
+        os.mkdir('/content/Trajectory-Transformer/output/QuantizedTF')
     except:
         pass
     try:
-        os.mkdir(f'models/QuantizedTF')
-    except:
-        pass
-
-    try:
-        os.mkdir(f'output/QuantizedTF/{args.name}')
+        os.mkdir(f'/content/Trajectory-Transformer/models/QuantizedTF')
     except:
         pass
 
     try:
-        os.mkdir(f'models/QuantizedTF/{args.name}')
+        os.mkdir(f'/content/Trajectory-Transformer/output/QuantizedTF/{args.name}')
+    except:
+        pass
+
+    try:
+        os.mkdir(f'/content/Trajectory-Transformer/models/QuantizedTF/{args.name}')
     except:
         pass
 
@@ -87,14 +87,14 @@ def main():
 
     test_dataset,_ =  baselineUtils.create_dataset(args.dataset_folder,args.dataset_name,0,args.obs,args.preds,delim=args.delim,train=False,eval=True,verbose=args.verbose)
 
-    mat = scipy.io.loadmat(os.path.join(args.dataset_folder, args.dataset_name, "clusters.mat"))
+    mat = scipy.io.loadmat(os.path.join('/content/Trajectory-Transformer',args.dataset_folder, args.dataset_name, "clusters.mat"))
 
     clusters=mat['centroids']
 
     model=quantized_TF.QuantizedTF(clusters.shape[0], clusters.shape[0]+1, clusters.shape[0], N=args.layers,
                    d_model=args.emb_size, d_ff=1024, h=args.heads).to(device)
 
-    model.load_state_dict(torch.load(f'models/QuantizedTF/{args.name}/{args.epoch}.pth'))
+    model.load_state_dict(torch.load(f'/content/Trajectory-Transformer/models/QuantizedTF/{args.name}/{args.epoch}.pth'))
     model.to(device)
 
 
@@ -154,7 +154,7 @@ def main():
         #log.add_scalar('eval/DET_mad', mad, epoch)
         #log.add_scalar('eval/DET_fad', fad, epoch)
 
-        scipy.io.savemat(f"output/QuantizedTF/{args.name}/MM_deterministic.mat",{'input':inp,'gt':gt,'pr':pr,'peds':peds,'frames':frames,'dt':dt,'dt_names':dt_names})
+        scipy.io.savemat(f"/content/Trajectory-Transformer/output/QuantizedTF/{args.name}/MM_deterministic.mat",{'input':inp,'gt':gt,'pr':pr,'peds':peds,'frames':frames,'dt':dt,'dt_names':dt_names})
 
         print("Determinitic:")
         print("mad: %6.3f"%mad)
@@ -228,7 +228,7 @@ def main():
         #log.add_scalar('eval/MM_mad', mad_samp, epoch)
         #log.add_scalar('eval/MM_fad', fad_samp, epoch)
         preds_all_fin=np.stack(list([samp[i]['pr'] for i in range(num_samples)]),-1)
-        scipy.io.savemat(f"output/QuantizedTF/{args.name}/MM_{num_samples}.mat",{'input':inp,'gt':gt,'pr':preds_all_fin,'peds':peds,'frames':frames,'dt':dt,'dt_names':dt_names})
+        scipy.io.savemat(f"/content/Trajectory-Transformer/output/QuantizedTF/{args.name}/MM_{num_samples}.mat",{'input':inp,'gt':gt,'pr':preds_all_fin,'peds':peds,'frames':frames,'dt':dt,'dt_names':dt_names})
 
         print("Determinitic:")
         print("mad: %6.3f"%mad)
@@ -237,36 +237,6 @@ def main():
         print("Multimodality:")
         print("mad: %6.3f"%mad_samp)
         print("fad: %6.3f" % fad_samp)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__=='__main__':
